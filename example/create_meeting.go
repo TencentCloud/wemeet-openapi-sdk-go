@@ -24,7 +24,7 @@ func CreateMeetingDemo() {
 	request := &meetings.ApiV1MeetingsPostRequest{
 		Body: &meetings.V1MeetingsPostRequest{
 			Instanceid:  1,
-			MeetingType: wemeetcore.PtrInt32(0),
+			MeetingType: wemeetcore.PtrInt64(0),
 			Subject:     "测试会议",
 			Type:        1,
 			Userid:      "userid",
