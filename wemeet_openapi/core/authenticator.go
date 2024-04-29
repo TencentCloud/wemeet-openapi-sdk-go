@@ -12,6 +12,7 @@ import (
 	"io/ioutil"
 	"math/rand"
 	"net/http"
+	"strconv"
 	"time"
 )
 
@@ -71,8 +72,11 @@ func (jwt JWTAuthenticator) AuthHeader(req *http.Request) error {
 	req.Header.Set(HeaderSdkId, jwt.config.SdkId)
 
 	if jwt.Nonce == 0 {
+		ts := time.Now().UnixMilli()
 		rand.Seed(time.Now().UnixNano())
-		jwt.Nonce = rand.Uint64()
+		rs := fmt.Sprintf("%06d", rand.Intn(1000000))
+		ri, _ := strconv.Atoi(rs)
+		jwt.Nonce = uint64(ts)*1000000 + uint64(ri)
 	}
 	req.Header.Set(XTCHeaderNonce, fmt.Sprint(jwt.Nonce))
 
@@ -169,8 +173,11 @@ func (oauth2 OAuth2Authenticator) AuthHeader(httpReq *http.Request) error {
 	}
 	httpReq.Header.Set(HeaderOpenId, oauth2.OpenId)
 	if oauth2.Nonce == 0 {
+		ts := time.Now().UnixMilli()
 		rand.Seed(time.Now().UnixNano())
-		oauth2.Nonce = rand.Uint64()
+		rs := fmt.Sprintf("%06d", rand.Intn(1000000))
+		ri, _ := strconv.Atoi(rs)
+		oauth2.Nonce = uint64(ts)*1000000 + uint64(ri)
 	}
 	httpReq.Header.Set(XTCHeaderNonce, fmt.Sprint(oauth2.Nonce))
 
