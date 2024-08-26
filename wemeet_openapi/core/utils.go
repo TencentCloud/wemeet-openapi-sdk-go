@@ -3,6 +3,7 @@ package wemeetcore
 import (
 	"fmt"
 	"reflect"
+	"strconv"
 	"time"
 )
 
@@ -42,4 +43,25 @@ func QueryValue(v interface{}) string {
 		v = vt.Elem().Interface()
 	}
 	return fmt.Sprint(v)
+}
+
+// ToString 使用反射获取值的类型
+func ToString(value interface{}) string {
+	// 使用反射获取值的类型
+	switch value.(type) {
+	case int, int8, int16, int32, int64:
+		return strconv.FormatInt(reflect.ValueOf(value).Int(), 10)
+	case uint, uint8, uint16, uint32, uint64:
+		return strconv.FormatUint(reflect.ValueOf(value).Uint(), 10)
+	case float32:
+		return strconv.FormatFloat(float64(value.(float32)), 'f', -1, 32)
+	case float64:
+		return strconv.FormatFloat(value.(float64), 'f', -1, 64)
+	case bool:
+		return strconv.FormatBool(value.(bool))
+	case string:
+		return value.(string)
+	default:
+		return fmt.Sprintf("%v", value)
+	}
 }

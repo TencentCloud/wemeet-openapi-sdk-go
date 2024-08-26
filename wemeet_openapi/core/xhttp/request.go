@@ -43,7 +43,7 @@ type RequestOptionFunc func(request *ApiRequest)
 func WithRequestHeader(header http.Header) RequestOptionFunc {
 	return func(request *ApiRequest) {
 		if request.header == nil {
-			header = make(http.Header, len(header))
+			request.header = make(http.Header, len(header))
 		}
 		for k, v := range header {
 			request.header[k] = v

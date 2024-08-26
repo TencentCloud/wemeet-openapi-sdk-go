@@ -13,6 +13,7 @@ import (
 	"math/rand"
 	"net/http"
 	"strconv"
+	"strings"
 	"time"
 )
 
@@ -113,7 +114,7 @@ func (jwt JWTAuthenticator) AuthHeader(req *http.Request) error {
 func (jwt JWTAuthenticator) signature(req *http.Request) string {
 
 	var reqBody = ""
-	if req.Body != nil {
+	if req.Body != nil && !strings.Contains(req.Header.Get("Content-Type"), "multipart/form-data") {
 		reqBody = string(jwt.readRequestBody(req))
 	}
 
