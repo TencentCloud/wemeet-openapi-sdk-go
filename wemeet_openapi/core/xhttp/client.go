@@ -137,10 +137,10 @@ func (c *client) doRequest(ctx context.Context, req *ApiRequest, method string,
 
 	// 序列化请求体
 	var bodyReader io.Reader
-	if reader, ok := req.Body.(*bytes.Buffer); ok {
-		bodyReader = reader
-	} else if req.Body != nil {
-		if serializer != nil {
+	if req.Body != nil {
+		if reader, ok := req.Body.(*bytes.Buffer); ok {
+			bodyReader = reader
+		} else if serializer != nil {
 			data, err := serializer.Serialize(req.Body)
 			if err != nil {
 				return nil, err

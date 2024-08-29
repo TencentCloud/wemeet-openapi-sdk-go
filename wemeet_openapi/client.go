@@ -3,19 +3,29 @@ package wemeet
 import (
 	core "github.com/TencentCloud/wemeet-openapi-sdk-go/wemeet_openapi/core"
 	xhttp "github.com/TencentCloud/wemeet-openapi-sdk-go/wemeet_openapi/core/xhttp"
-	meetings "github.com/TencentCloud/wemeet-openapi-sdk-go/wemeet_openapi/service/meetings"
-	records "github.com/TencentCloud/wemeet-openapi-sdk-go/wemeet_openapi/service/records"
+	application_group "github.com/TencentCloud/wemeet-openapi-sdk-go/wemeet_openapi/service/application_group"
+	layout "github.com/TencentCloud/wemeet-openapi-sdk-go/wemeet_openapi/service/layout"
 	meeting_control "github.com/TencentCloud/wemeet-openapi-sdk-go/wemeet_openapi/service/meeting_control"
 	meeting_guest "github.com/TencentCloud/wemeet-openapi-sdk-go/wemeet_openapi/service/meeting_guest"
+	meeting_room "github.com/TencentCloud/wemeet-openapi-sdk-go/wemeet_openapi/service/meeting_room"
+	meetings "github.com/TencentCloud/wemeet-openapi-sdk-go/wemeet_openapi/service/meetings"
+	record_intelligence "github.com/TencentCloud/wemeet-openapi-sdk-go/wemeet_openapi/service/record_intelligence"
+	records "github.com/TencentCloud/wemeet-openapi-sdk-go/wemeet_openapi/service/records"
+	user_manager "github.com/TencentCloud/wemeet-openapi-sdk-go/wemeet_openapi/service/user_manager"
 )
 
 type Client struct {
 	config *core.Config
 	// service interfaces
-	MeetingsApi meetings.Service
-	RecordsApi records.Service
-	MeetingControlApi meeting_control.Service
-	MeetingGuestApi meeting_guest.Service
+	MeetingsApi           meetings.Service
+	ApplicationGroupApi   application_group.Service
+	MeetingControlApi     meeting_control.Service
+	UserManagerApi        user_manager.Service
+	RecordsApi            records.Service
+	RecordIntelligenceApi record_intelligence.Service
+	MeetingGuestApi       meeting_guest.Service
+	MeetingRoomApi        meeting_room.Service
+	LayoutApi             layout.Service
 }
 
 func (clt Client) GetConfig() core.Config {
@@ -93,7 +103,12 @@ func initService(client *Client) {
 
 	// 注册服务
 	client.MeetingsApi = meetings.NewService(client.config)
-	client.RecordsApi = records.NewService(client.config)
+	client.ApplicationGroupApi = application_group.NewService(client.config)
 	client.MeetingControlApi = meeting_control.NewService(client.config)
+	client.UserManagerApi = user_manager.NewService(client.config)
+	client.RecordsApi = records.NewService(client.config)
+	client.RecordIntelligenceApi = record_intelligence.NewService(client.config)
 	client.MeetingGuestApi = meeting_guest.NewService(client.config)
+	client.MeetingRoomApi = meeting_room.NewService(client.config)
+	client.LayoutApi = layout.NewService(client.config)
 }
