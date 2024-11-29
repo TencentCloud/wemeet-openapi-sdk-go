@@ -4,7 +4,7 @@
 
    SAAS版RESTFUL风格API
 
-   API version: v1.0.3
+   API version: v1.0.4
 */
 package wemeetopenapi
 
