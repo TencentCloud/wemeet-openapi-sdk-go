@@ -4,7 +4,7 @@
 
    SAAS版RESTFUL风格API
 
-   API version: v1.0.2
+   API version: v1.0.3
 */
 package wemeetopenapi
 
@@ -785,7 +785,8 @@ type ApiV1MetricsRecordsGetRequest struct {
 	// 查询起始时间戳，UNIX 时间戳（单位秒）。说明：时间区间不允许超过31天。
 	StartTime *string `json:"-"`
 	// 查询结束时间戳，UNIX 时间戳（单位秒）。说明：时间区间不允许超过31天。
-	EndTime *string `json:"-"`
+	EndTime *string                 `json:"-"`
+	Body    *map[string]interface{} `json:"body,omitempty"`
 }
 
 type ApiV1MetricsRecordsGetResponse struct {
@@ -804,6 +805,7 @@ V1MetricsRecordsGet 查询录制文件访问数据[/v1/metrics/records - Get]
 func (s *recordsAPIService) V1MetricsRecordsGet(ctx context.Context, request *ApiV1MetricsRecordsGetRequest, opts ...core.RequestOptionFunc) (response *ApiV1MetricsRecordsGetResponse, err error) {
 	apiReq := &xhttp.ApiRequest{
 		ApiURI:      "/v1/metrics/records",
+		Body:        request.Body,
 		PathParams:  xhttp.PathParams{},
 		QueryParams: xhttp.QueryParams{},
 	}

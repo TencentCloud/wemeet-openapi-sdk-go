@@ -4,7 +4,7 @@
 
    SAAS版RESTFUL风格API
 
-   API version: v1.0.2
+   API version: v1.0.3
 */
 package wemeetopenapi
 
@@ -208,6 +208,8 @@ type V1RecordsAccessMeetingRecordIdPostRequestAccessMembersInner struct {
 type V1RecordsApprovalsMeetingRecordIdPutRequest struct {
 	// 审批动作。 1：同意 2：忽略
 	Action int64 `json:"action"`
+	// 申请 ID 列表，通过订阅云录制查看申请事件（可跳转链接），可以获取申请 ID。
+	ApplyIdList []string `json:"apply_id_list"`
 	// 操作者 ID。 operator_id 必须与 operator_id_type 配合使用。根据 operator_id_type 的值，operator_id 代表不同类型。 operator_id_type=2，operator_id 必须和公共参数的 openid 一致。 operator_id 和 userid 至少填写一个，两个参数如果都传了以 operator_id 为准。 使用 OAuth 公参鉴权后不能使用 userid 为入参。
 	OperatorId string `json:"operator_id"`
 	// 操作者 ID 的类型： 1：userid 2：open_id 如果 operator_id 和 userid 具有值，则以 operator_id 为准。

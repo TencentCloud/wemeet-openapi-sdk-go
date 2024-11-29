@@ -4,7 +4,7 @@
 
    SAAS版RESTFUL风格API
 
-   API version: v1.0.2
+   API version: v1.0.3
 */
 package wemeetopenapi
 
@@ -83,6 +83,15 @@ type Service interface {
 	V1UsersAccountStatisticsGet(ctx context.Context, request *ApiV1UsersAccountStatisticsGetRequest, opts ...core.RequestOptionFunc) (response *ApiV1UsersAccountStatisticsGetResponse, err error)
 
 	/*
+	   V1UsersAdvanceListGet 获取用户列表（新）[/v1/users/advance/list - Get]
+
+	   获取企业用户列表，支持高级搜索。企微企业暂不支持使用该接口。
+	   自建应用权限点：查看企业用户，管理企业用户
+
+	*/
+	V1UsersAdvanceListGet(ctx context.Context, request *ApiV1UsersAdvanceListGetRequest, opts ...core.RequestOptionFunc) (response *ApiV1UsersAdvanceListGetResponse, err error)
+
+	/*
 	   V1UsersDelete 删除用户（通过 uuid 删除用户）[/v1/users - Delete]
 
 	*/
@@ -156,6 +165,8 @@ type Service interface {
 	/*
 	   V1UsersPut 更新用户（通过 uuid 更新用户）[/v1/users - Put]
 
+	   通过 uuid 更新用户
+
 	*/
 	V1UsersPut(ctx context.Context, request *ApiV1UsersPutRequest, opts ...core.RequestOptionFunc) (response *ApiV1UsersPutResponse, err error)
 
@@ -224,7 +235,11 @@ func NewService(config *core.Config) Service {
 }
 
 type ApiV1AuthUsersCancelAuthPutRequest struct {
-	Body *map[string]interface{} `json:"body,omitempty"`
+	// 操作者ID
+	OperatorId *string `json:"-"`
+	// 操作者ID类型
+	OperatorIdType *string                 `json:"-"`
+	Body           *map[string]interface{} `json:"body,omitempty"`
 }
 
 type ApiV1AuthUsersCancelAuthPutResponse struct {
@@ -245,8 +260,22 @@ func (s *userManagerAPIService) V1AuthUsersCancelAuthPut(ctx context.Context, re
 		QueryParams: xhttp.QueryParams{},
 	}
 
+	if request.OperatorId == nil {
+		return nil, fmt.Errorf("operator_id is required and must be specified")
+	}
+
+	if request.OperatorIdType == nil {
+		return nil, fmt.Errorf("operator_id_type is required and must be specified")
+	}
+
 	// path 参数
 	// query 参数
+	if request.OperatorId != nil {
+		apiReq.QueryParams.Set("operator_id", core.QueryValue(request.OperatorId))
+	}
+	if request.OperatorIdType != nil {
+		apiReq.QueryParams.Set("operator_id_type", core.QueryValue(request.OperatorIdType))
+	}
 	// 转换 options
 	var httpOptions []xhttp.RequestOptionFunc
 	for _, opt := range opts {
@@ -685,9 +714,118 @@ func (s *userManagerAPIService) V1UsersAccountStatisticsGet(ctx context.Context,
 	return
 }
 
+type ApiV1UsersAdvanceListGetRequest struct {
+	OperatorId     *string `json:"-"`
+	OperatorIdType *string `json:"-"`
+	// 分页获取用户列表的查询起始位置值。当企业用户较多时，建议使用此参数进行分页查询，避免查询超时。此参数为非必选参数，默认值为空，从头开始查询。 设置每页返回的数量，请参考参数“size”的说明。查询返回输出参数“has_remaining”为 true，表示人数较多，需要继续查询。返回参数“next_pos”的值即为下一次查询的 pos 的值。多次调用该查询接口直到输出参数“has_remaining”值为 false。
+	Pos *string `json:"-"`
+	// 目前每页支持最大100条。
+	Size *string `json:"-"`
+	// 账号状态。1：正常  3：未激活 4：禁用
+	Status *string `json:"-"`
+	// 账号类型。 1：高级 2：免费
+	UserAccountType *string `json:"-"`
+	// 是否有 AI 账号能力。 true：有  false：无
+	EnableAiAccount *string `json:"-"`
+	// 指定拉取的部门信息，不传则拉取全企业，需有指定范围的管理权限
+	DepartmentId *string                 `json:"-"`
+	Body         *map[string]interface{} `json:"body,omitempty"`
+}
+
+type ApiV1UsersAdvanceListGetResponse struct {
+	*xhttp.ApiResponse
+	Data *V1UsersAdvanceListGet200Response `json:"data,omitempty"`
+}
+
+/*
+V1UsersAdvanceListGet 获取用户列表（新）[/v1/users/advance/list - Get]
+
+获取企业用户列表，支持高级搜索。企微企业暂不支持使用该接口。
+自建应用权限点：查看企业用户，管理企业用户
+*/
+func (s *userManagerAPIService) V1UsersAdvanceListGet(ctx context.Context, request *ApiV1UsersAdvanceListGetRequest, opts ...core.RequestOptionFunc) (response *ApiV1UsersAdvanceListGetResponse, err error) {
+	apiReq := &xhttp.ApiRequest{
+		ApiURI:      "/v1/users/advance/list",
+		Body:        request.Body,
+		PathParams:  xhttp.PathParams{},
+		QueryParams: xhttp.QueryParams{},
+	}
+
+	if request.OperatorId == nil {
+		return nil, fmt.Errorf("operator_id is required and must be specified")
+	}
+
+	if request.OperatorIdType == nil {
+		return nil, fmt.Errorf("operator_id_type is required and must be specified")
+	}
+
+	// path 参数
+	// query 参数
+	if request.OperatorId != nil {
+		apiReq.QueryParams.Set("operator_id", core.QueryValue(request.OperatorId))
+	}
+	if request.OperatorIdType != nil {
+		apiReq.QueryParams.Set("operator_id_type", core.QueryValue(request.OperatorIdType))
+	}
+	if request.Pos != nil {
+		apiReq.QueryParams.Set("pos", core.QueryValue(request.Pos))
+	}
+	if request.Size != nil {
+		apiReq.QueryParams.Set("size", core.QueryValue(request.Size))
+	}
+	if request.Status != nil {
+		apiReq.QueryParams.Set("status", core.QueryValue(request.Status))
+	}
+	if request.UserAccountType != nil {
+		apiReq.QueryParams.Set("user_account_type", core.QueryValue(request.UserAccountType))
+	}
+	if request.EnableAiAccount != nil {
+		apiReq.QueryParams.Set("enable_ai_account", core.QueryValue(request.EnableAiAccount))
+	}
+	if request.DepartmentId != nil {
+		apiReq.QueryParams.Set("department_id", core.QueryValue(request.DepartmentId))
+	}
+	// 转换 options
+	var httpOptions []xhttp.RequestOptionFunc
+	for _, opt := range opts {
+		httpOptions = append(httpOptions, opt(*s.config))
+	}
+	// 增加 SDK Version 标识
+	httpOptions = append(httpOptions, xhttp.WithRequestAuthenticator(core.DefaultAuthenticator))
+
+	apiRsp, err := s.config.Clt.Get(ctx, apiReq, httpOptions...)
+	if err != nil {
+		return nil, err
+	}
+
+	if apiRsp.StatusCode >= 300 {
+		var svrErr = &core.ServiceError{
+			ApiResponse: apiRsp,
+		}
+		_ = core.JsonSerializer.Deserialize(apiRsp.RawBody, svrErr)
+		return nil, svrErr
+	}
+
+	response = &ApiV1UsersAdvanceListGetResponse{
+		ApiResponse: apiRsp,
+		Data:        new(V1UsersAdvanceListGet200Response),
+	}
+	if err = apiRsp.Translate(response.Data); err != nil {
+		return nil, &core.ClientError{
+			Err: fmt.Errorf("http status code: %d, response: %s, err: %v",
+				apiRsp.StatusCode, apiRsp.RawBody, err),
+		}
+	}
+	return
+}
+
 type ApiV1UsersDeleteRequest struct {
-	Uuid *string                 `json:"-"`
-	Body *map[string]interface{} `json:"body,omitempty"`
+	Uuid *string `json:"-"`
+	// 操作者ID
+	OperatorId *string `json:"-"`
+	// 操作者ID类型
+	OperatorIdType *string                 `json:"-"`
+	Body           *map[string]interface{} `json:"body,omitempty"`
 }
 
 type ApiV1UsersDeleteResponse struct {
@@ -710,10 +848,24 @@ func (s *userManagerAPIService) V1UsersDelete(ctx context.Context, request *ApiV
 		return nil, fmt.Errorf("uuid is required and must be specified")
 	}
 
+	if request.OperatorId == nil {
+		return nil, fmt.Errorf("operator_id is required and must be specified")
+	}
+
+	if request.OperatorIdType == nil {
+		return nil, fmt.Errorf("operator_id_type is required and must be specified")
+	}
+
 	// path 参数
 	// query 参数
 	if request.Uuid != nil {
 		apiReq.QueryParams.Set("uuid", core.QueryValue(request.Uuid))
+	}
+	if request.OperatorId != nil {
+		apiReq.QueryParams.Set("operator_id", core.QueryValue(request.OperatorId))
+	}
+	if request.OperatorIdType != nil {
+		apiReq.QueryParams.Set("operator_id_type", core.QueryValue(request.OperatorIdType))
 	}
 	// 转换 options
 	var httpOptions []xhttp.RequestOptionFunc
@@ -806,8 +958,12 @@ func (s *userManagerAPIService) V1UsersDeleteTransferPost(ctx context.Context, r
 }
 
 type ApiV1UsersGetRequest struct {
-	Uuid *string                 `json:"-"`
-	Body *map[string]interface{} `json:"body,omitempty"`
+	Uuid *string `json:"-"`
+	// 操作者ID
+	OperatorId *string `json:"-"`
+	// 操作者ID类型，1:userid，2:open_id
+	OperatorIdType *string                 `json:"-"`
+	Body           *map[string]interface{} `json:"body,omitempty"`
 }
 
 type ApiV1UsersGetResponse struct {
@@ -832,10 +988,24 @@ func (s *userManagerAPIService) V1UsersGet(ctx context.Context, request *ApiV1Us
 		return nil, fmt.Errorf("uuid is required and must be specified")
 	}
 
+	if request.OperatorId == nil {
+		return nil, fmt.Errorf("operator_id is required and must be specified")
+	}
+
+	if request.OperatorIdType == nil {
+		return nil, fmt.Errorf("operator_id_type is required and must be specified")
+	}
+
 	// path 参数
 	// query 参数
 	if request.Uuid != nil {
 		apiReq.QueryParams.Set("uuid", core.QueryValue(request.Uuid))
+	}
+	if request.OperatorId != nil {
+		apiReq.QueryParams.Set("operator_id", core.QueryValue(request.OperatorId))
+	}
+	if request.OperatorIdType != nil {
+		apiReq.QueryParams.Set("operator_id_type", core.QueryValue(request.OperatorIdType))
 	}
 	// 转换 options
 	var httpOptions []xhttp.RequestOptionFunc
@@ -1068,8 +1238,12 @@ type ApiV1UsersListGetRequest struct {
 	// 当前页，大于等于1。
 	Page *string `json:"-"`
 	// 分页大小，最大为20。
-	PageSize *string                 `json:"-"`
-	Body     *map[string]interface{} `json:"body,omitempty"`
+	PageSize *string `json:"-"`
+	// 操作者ID
+	OperatorId *string `json:"-"`
+	// 操作者ID类型，1:userid,2:open_id
+	OperatorIdType *string                 `json:"-"`
+	Body           *map[string]interface{} `json:"body,omitempty"`
 }
 
 type ApiV1UsersListGetResponse struct {
@@ -1098,6 +1272,14 @@ func (s *userManagerAPIService) V1UsersListGet(ctx context.Context, request *Api
 		return nil, fmt.Errorf("page_size is required and must be specified")
 	}
 
+	if request.OperatorId == nil {
+		return nil, fmt.Errorf("operator_id is required and must be specified")
+	}
+
+	if request.OperatorIdType == nil {
+		return nil, fmt.Errorf("operator_id_type is required and must be specified")
+	}
+
 	// path 参数
 	// query 参数
 	if request.Page != nil {
@@ -1105,6 +1287,12 @@ func (s *userManagerAPIService) V1UsersListGet(ctx context.Context, request *Api
 	}
 	if request.PageSize != nil {
 		apiReq.QueryParams.Set("page_size", core.QueryValue(request.PageSize))
+	}
+	if request.OperatorId != nil {
+		apiReq.QueryParams.Set("operator_id", core.QueryValue(request.OperatorId))
+	}
+	if request.OperatorIdType != nil {
+		apiReq.QueryParams.Set("operator_id_type", core.QueryValue(request.OperatorIdType))
 	}
 	// 转换 options
 	var httpOptions []xhttp.RequestOptionFunc
@@ -1258,8 +1446,8 @@ func (s *userManagerAPIService) V1UsersPost(ctx context.Context, request *ApiV1U
 }
 
 type ApiV1UsersPutRequest struct {
-	Uuid *string                 `json:"-"`
-	Body *map[string]interface{} `json:"body,omitempty"`
+	Uuid *string            `json:"-"`
+	Body *V1UsersPutRequest `json:"body,omitempty"`
 }
 
 type ApiV1UsersPutResponse struct {
@@ -1269,6 +1457,8 @@ type ApiV1UsersPutResponse struct {
 
 /*
 V1UsersPut 更新用户（通过 uuid 更新用户）[/v1/users - Put]
+
+通过 uuid 更新用户
 */
 func (s *userManagerAPIService) V1UsersPut(ctx context.Context, request *ApiV1UsersPutRequest, opts ...core.RequestOptionFunc) (response *ApiV1UsersPutResponse, err error) {
 	apiReq := &xhttp.ApiRequest{
@@ -1323,8 +1513,12 @@ func (s *userManagerAPIService) V1UsersPut(ctx context.Context, request *ApiV1Us
 
 type ApiV1UsersUseridDeleteRequest struct {
 	// 被删除用户的userid
-	Userid string                  `json:"-"`
-	Body   *map[string]interface{} `json:"body,omitempty"`
+	Userid string `json:"-"`
+	// 操作者ID
+	OperatorId *string `json:"-"`
+	// 操作者ID类型，1:userid
+	OperatorIdType *string                 `json:"-"`
+	Body           *map[string]interface{} `json:"body,omitempty"`
 }
 
 type ApiV1UsersUseridDeleteResponse struct {
@@ -1343,9 +1537,23 @@ func (s *userManagerAPIService) V1UsersUseridDelete(ctx context.Context, request
 		QueryParams: xhttp.QueryParams{},
 	}
 
+	if request.OperatorId == nil {
+		return nil, fmt.Errorf("operator_id is required and must be specified")
+	}
+
+	if request.OperatorIdType == nil {
+		return nil, fmt.Errorf("operator_id_type is required and must be specified")
+	}
+
 	// path 参数
 	apiReq.PathParams.Set("userid", core.PathValue(request.Userid))
 	// query 参数
+	if request.OperatorId != nil {
+		apiReq.QueryParams.Set("operator_id", core.QueryValue(request.OperatorId))
+	}
+	if request.OperatorIdType != nil {
+		apiReq.QueryParams.Set("operator_id_type", core.QueryValue(request.OperatorIdType))
+	}
 	// 转换 options
 	var httpOptions []xhttp.RequestOptionFunc
 	for _, opt := range opts {
@@ -1448,8 +1656,12 @@ func (s *userManagerAPIService) V1UsersUseridEnablePut(ctx context.Context, requ
 
 type ApiV1UsersUseridGetRequest struct {
 	// 调用方用于标示用户的唯一 ID（企业内部请使用企业唯一用户标识；OAuth2.0 鉴权用户请使用 openId）。 企业唯一用户标识说明： 1. 企业对接 SSO 时使用的员工唯一标识 ID； 2. 企业调用创建用户接口时传递的 userid 参数。
-	Userid string                  `json:"-"`
-	Body   *map[string]interface{} `json:"body,omitempty"`
+	Userid string `json:"-"`
+	// 操作者ID
+	OperatorId *string `json:"-"`
+	// 操作者ID类型，1:userid,2:open_id
+	OperatorIdType *string                 `json:"-"`
+	Body           *map[string]interface{} `json:"body,omitempty"`
 }
 
 type ApiV1UsersUseridGetResponse struct {
@@ -1468,9 +1680,23 @@ func (s *userManagerAPIService) V1UsersUseridGet(ctx context.Context, request *A
 		QueryParams: xhttp.QueryParams{},
 	}
 
+	if request.OperatorId == nil {
+		return nil, fmt.Errorf("operator_id is required and must be specified")
+	}
+
+	if request.OperatorIdType == nil {
+		return nil, fmt.Errorf("operator_id_type is required and must be specified")
+	}
+
 	// path 参数
 	apiReq.PathParams.Set("userid", core.PathValue(request.Userid))
 	// query 参数
+	if request.OperatorId != nil {
+		apiReq.QueryParams.Set("operator_id", core.QueryValue(request.OperatorId))
+	}
+	if request.OperatorIdType != nil {
+		apiReq.QueryParams.Set("operator_id_type", core.QueryValue(request.OperatorIdType))
+	}
 	// 转换 options
 	var httpOptions []xhttp.RequestOptionFunc
 	for _, opt := range opts {
@@ -1507,8 +1733,12 @@ func (s *userManagerAPIService) V1UsersUseridGet(ctx context.Context, request *A
 
 type ApiV1UsersUseridInviteActivatePutRequest struct {
 	// 调用方用于标示用户的唯一 ID（例如：企业用户可以为企业账户英文名、个人用户可以为手机号等，暂不支持中文）。
-	Userid string                  `json:"-"`
-	Body   *map[string]interface{} `json:"body,omitempty"`
+	Userid string `json:"-"`
+	// 操作者ID
+	OperatorId *string `json:"-"`
+	// 操作者ID类型，1:userid
+	OperatorIdType *string                 `json:"-"`
+	Body           *map[string]interface{} `json:"body,omitempty"`
 }
 
 type ApiV1UsersUseridInviteActivatePutResponse struct {
@@ -1531,9 +1761,23 @@ func (s *userManagerAPIService) V1UsersUseridInviteActivatePut(ctx context.Conte
 		QueryParams: xhttp.QueryParams{},
 	}
 
+	if request.OperatorId == nil {
+		return nil, fmt.Errorf("operator_id is required and must be specified")
+	}
+
+	if request.OperatorIdType == nil {
+		return nil, fmt.Errorf("operator_id_type is required and must be specified")
+	}
+
 	// path 参数
 	apiReq.PathParams.Set("userid", core.PathValue(request.Userid))
 	// query 参数
+	if request.OperatorId != nil {
+		apiReq.QueryParams.Set("operator_id", core.QueryValue(request.OperatorId))
+	}
+	if request.OperatorIdType != nil {
+		apiReq.QueryParams.Set("operator_id_type", core.QueryValue(request.OperatorIdType))
+	}
 	// 转换 options
 	var httpOptions []xhttp.RequestOptionFunc
 	for _, opt := range opts {

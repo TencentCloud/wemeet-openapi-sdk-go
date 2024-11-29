@@ -4,7 +4,7 @@
 
    SAAS版RESTFUL风格API
 
-   API version: v1.0.2
+   API version: v1.0.3
 */
 package wemeetopenapi
 
@@ -42,6 +42,8 @@ type V1SmartSpeakersGet200Response struct {
 
 // V1SmartSpeakersGet200ResponseSpeakerListInner struct for V1SmartSpeakersGet200ResponseSpeakerListInner
 type V1SmartSpeakersGet200ResponseSpeakerListInner struct {
+	// 会议中为每个参会成员授予的临时 ID，以会议为维度，表示同一场会议内用户的唯一标识，不同会议间 ms_open_id 隔离。
+	MsOpenId *string `json:"ms_open_id,omitempty"`
 	// 发言人ID。speaker_id 必须与 speaker_id_type 配合使用。根据 speaker_id_type 的值，speaker_id 代表不同类型。
 	SpeakerId *string `json:"speaker_id,omitempty"`
 	// 发言人ID类型： 1：userid 2：openid 6：temp_id（临时 ID，上传的文件无法映射到 userid，故仅在当前录制发言人中代表唯一标识）

@@ -4,7 +4,7 @@
 
    SAAS版RESTFUL风格API
 
-   API version: v1.0.2
+   API version: v1.0.3
 */
 package wemeetopenapi
 
@@ -26,6 +26,12 @@ type V1MeetingsMeetingIdDismissPostRequest struct {
 	RetrieveCode *int64 `json:"retrieve_code,omitempty"`
 	// 调用方用于标示用户的唯一 ID（企业内部请使用企业唯一用户标识；OAuth2.0 鉴权用户请使用 openId）。 企业唯一用户标识说明：企业对接 SSO 时使用的员工唯一标识 ID，企业调用创建用户接口时传递的 userid 参数。
 	Userid *string `json:"userid,omitempty"`
+}
+
+// V1RealControlMeetingsMeetingIdAsrPut200Response struct for V1RealControlMeetingsMeetingIdAsrPut200Response
+type V1RealControlMeetingsMeetingIdAsrPut200Response struct {
+	Code    *int64  `json:"code,omitempty"`
+	Message *string `json:"message,omitempty"`
 }
 
 // V1RealControlMeetingsMeetingIdAsrPutRequest struct for V1RealControlMeetingsMeetingIdAsrPutRequest

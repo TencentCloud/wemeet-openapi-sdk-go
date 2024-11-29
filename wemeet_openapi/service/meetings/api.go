@@ -4,7 +4,7 @@
 
    SAAS版RESTFUL风格API
 
-   API version: v1.0.2
+   API version: v1.0.3
 */
 package wemeetopenapi
 
@@ -440,8 +440,10 @@ type ApiV1AsrDetailsGetRequest struct {
 	// 页码，默认1
 	Page *string `json:"-"`
 	// 分页大小，默认10，最大50
-	PageSize *string                 `json:"-"`
-	Body     *map[string]interface{} `json:"body,omitempty"`
+	PageSize *string `json:"-"`
+	// 是否展示双语，默认不展示双语
+	ShowBilingual *string                 `json:"-"`
+	Body          *map[string]interface{} `json:"body,omitempty"`
 }
 
 type ApiV1AsrDetailsGetResponse struct {
@@ -499,6 +501,9 @@ func (s *meetingsAPIService) V1AsrDetailsGet(ctx context.Context, request *ApiV1
 	}
 	if request.PageSize != nil {
 		apiReq.QueryParams.Set("page_size", core.QueryValue(request.PageSize))
+	}
+	if request.ShowBilingual != nil {
+		apiReq.QueryParams.Set("show_bilingual", core.QueryValue(request.ShowBilingual))
 	}
 	// 转换 options
 	var httpOptions []xhttp.RequestOptionFunc
@@ -2229,6 +2234,8 @@ type ApiV1MeetingsMeetingIdQosGetRequest struct {
 	OperatorId *string `json:"-"`
 	// 操作者ID类型
 	OperatorIdType *string `json:"-"`
+	// 周期性会议子id
+	SubMeetingId *string `json:"-"`
 	// 分页大小，20-100
 	PageSize *string `json:"-"`
 	// 页码
@@ -2273,6 +2280,10 @@ func (s *meetingsAPIService) V1MeetingsMeetingIdQosGet(ctx context.Context, requ
 		return nil, fmt.Errorf("operator_id_type is required and must be specified")
 	}
 
+	if request.SubMeetingId == nil {
+		return nil, fmt.Errorf("sub_meeting_id is required and must be specified")
+	}
+
 	// path 参数
 	apiReq.PathParams.Set("meeting_id", core.PathValue(request.MeetingId))
 	// query 参数
@@ -2302,6 +2313,9 @@ func (s *meetingsAPIService) V1MeetingsMeetingIdQosGet(ctx context.Context, requ
 	}
 	if request.MaxValue != nil {
 		apiReq.QueryParams.Set("max_value", core.QueryValue(request.MaxValue))
+	}
+	if request.SubMeetingId != nil {
+		apiReq.QueryParams.Set("sub_meeting_id", core.QueryValue(request.SubMeetingId))
 	}
 	// 转换 options
 	var httpOptions []xhttp.RequestOptionFunc

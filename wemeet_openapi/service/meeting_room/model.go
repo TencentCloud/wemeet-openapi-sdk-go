@@ -4,7 +4,7 @@
 
    SAAS版RESTFUL风格API
 
-   API version: v1.0.2
+   API version: v1.0.3
 */
 package wemeetopenapi
 
@@ -107,8 +107,6 @@ type V1MeetingRoomsGet200ResponseMeetingRoomListInner struct {
 	MeetingRoomStatus *int64 `json:"meeting_room_status,omitempty"`
 	// 容纳人数
 	ParticipantNumber *int64 `json:"participant_number,omitempty"`
-	// 1-预装 2-体验 3-付费
-	ProAccountType *int64 `json:"pro_account_type,omitempty"`
 	// 预定状态
 	ScheduledStatus *int64 `json:"scheduled_status,omitempty"`
 }

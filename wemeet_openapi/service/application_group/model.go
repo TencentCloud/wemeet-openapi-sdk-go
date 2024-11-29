@@ -4,7 +4,7 @@
 
    SAAS版RESTFUL风格API
 
-   API version: v1.0.2
+   API version: v1.0.3
 */
 package wemeetopenapi
 
@@ -17,7 +17,7 @@ type V1AppToolkitPostRequest struct {
 	// 会议id
 	MeetingId string `json:"meeting_id"`
 	// 工具箱应用列表
-	ToolList []V1AppToolkitPostRequestToolListInner `json:"tool_list,omitempty"`
+	ToolList []V1AppToolkitPostRequestToolListInner `json:"tool_list"`
 	// 外显在会中工具栏的应用id（需要保证在tool_list列表中，且列表中的可见范围对此设置也生效）
 	ToolbarSdkid *string `json:"toolbar_sdkid,omitempty"`
 	// 调用方用于标示用户的唯一 ID（企业内部请使用企业唯一用户标识；OAuth2.0鉴权用户请使用openId） 企业唯一用户标识说明： 1、 企业对接SSO时使用的员工唯一标识ID 2、 企业调用创建用户接口时传递的userid参数

@@ -4,7 +4,7 @@
 
    SAAS版RESTFUL风格API
 
-   API version: v1.0.2
+   API version: v1.0.3
 */
 package wemeetopenapi
 
@@ -153,6 +153,71 @@ type V1UsersAccountStatisticsGet200ResponseUserAccountDetailsInner struct {
 	UserAccountUsedCount *int64 `json:"user_account_used_count,omitempty"`
 }
 
+// V1UsersAdvanceListGet200Response struct for V1UsersAdvanceListGet200Response
+type V1UsersAdvanceListGet200Response struct {
+	// 是否还有未拉取的数据
+	HasRemaining *bool `json:"has_remaining,omitempty"`
+	// 下一次查询pos位置
+	NextPos *string                                      `json:"next_pos,omitempty"`
+	Users   []V1UsersAdvanceListGet200ResponseUsersInner `json:"users,omitempty"`
+}
+
+// V1UsersAdvanceListGet200ResponseUsersInner struct for V1UsersAdvanceListGet200ResponseUsersInner
+type V1UsersAdvanceListGet200ResponseUsersInner struct {
+	// 账号版本。 0：其他 1：商业版 2：企业版 3：教育版
+	AccountVersion *int64 `json:"account_version,omitempty"`
+	// AI 账号类型。 0：无账号 1：购买版 2：赠送版
+	AiAccountType *int64 `json:"ai_account_type,omitempty"`
+	// 手机区号
+	Area *string `json:"area,omitempty"`
+	// 头像地址
+	AvatarUrl *string `json:"avatar_url,omitempty"`
+	// 用户部门信息
+	DepartmentList []V1UsersAdvanceListGet200ResponseUsersInnerDepartmentListInner `json:"department_list,omitempty"`
+	// 邮箱
+	Email *string `json:"email,omitempty"`
+	// 是否有 AI 账号能力。 true：有  false：无  教育版/企业版存在有 AI 账号，商业版都具有 AI 能力，其余为 false。
+	EnableAiAccount *bool `json:"enable_ai_account,omitempty"`
+	// 入职时间
+	EntryTime *string `json:"entry_time,omitempty"`
+	// 员工职位
+	JobTitle *string `json:"job_title,omitempty"`
+	// 手机号
+	Phone *string `json:"phone,omitempty"`
+	// 手机号验证状态。 0：未知 1：已验证 2：未验证
+	PhoneStatus *int64 `json:"phone_status,omitempty"`
+	// 角色类型
+	RoleCode *string `json:"role_code,omitempty"`
+	// 角色名称
+	RoleName *string `json:"role_name,omitempty"`
+	// 员工工号
+	StaffId *string `json:"staff_id,omitempty"`
+	// 账号状态。账号状态： 1：正常 2：注销 3：未激活 4：禁用 5：预注册
+	Status *string `json:"status,omitempty"`
+	// 更新时间
+	UpdateTime *string `json:"update_time,omitempty"`
+	// 账号类型。 1：高级账号（企业版/教育版） 2：免费账号（企业版/教育版） 3：免费账号100方 （商业版） 4：高级账号300方（商业版） 5：高级账号500方（商业版） 6：高级账号1000方（商业版） 7：高级账号2000方（商业版） 8：高级账号100方（商业版）
+	UserAccountType *int64 `json:"user_account_type,omitempty"`
+	// 用户userid
+	Userid *string `json:"userid,omitempty"`
+	// 用户名称
+	Username *string `json:"username,omitempty"`
+	// 用户uuid
+	Uuid *string `json:"uuid,omitempty"`
+}
+
+// V1UsersAdvanceListGet200ResponseUsersInnerDepartmentListInner struct for V1UsersAdvanceListGet200ResponseUsersInnerDepartmentListInner
+type V1UsersAdvanceListGet200ResponseUsersInnerDepartmentListInner struct {
+	// 部门全路径
+	DepartmentFullName *string `json:"department_full_name,omitempty"`
+	// 部门ID
+	DepartmentId *string `json:"department_id,omitempty"`
+	// 部门名称
+	DepartmentName *string `json:"department_name,omitempty"`
+	// 是否主部门
+	IsMain *bool `json:"is_main,omitempty"`
+}
+
 // V1UsersDeleteTransferPostRequest struct for V1UsersDeleteTransferPostRequest
 type V1UsersDeleteTransferPostRequest struct {
 	// 删除用户的数据处理方式： 1=彻底删除； 2=转移给指定成员；
@@ -222,6 +287,8 @@ type V1UsersGet200ResponseDepartmentListInner struct {
 // V1UsersInfoBasicGet200Response struct for V1UsersInfoBasicGet200Response
 type V1UsersInfoBasicGet200Response struct {
 	AccountType *int64 `json:"account_type,omitempty"`
+	// 商企版计费需求，账号版本
+	AccountVersion *int64 `json:"account_version,omitempty"`
 	// AI账号类型 1:购买版 2:赠送版
 	AiAccountType *int64  `json:"ai_account_type,omitempty"`
 	AvatarUrl     *string `json:"avatar_url,omitempty"`
@@ -252,6 +319,10 @@ type V1UsersInviteActivatePost200ResponseInactivateUserListInner struct {
 
 // V1UsersInviteActivatePostRequest struct for V1UsersInviteActivatePostRequest
 type V1UsersInviteActivatePostRequest struct {
+	// 操作者ID
+	OperatorId string `json:"operator_id"`
+	// 操作者ID类型，1:userid
+	OperatorIdType int64 `json:"operator_id_type"`
 	// 未激活的账号列表，最多支持传100个
 	UseridList []string `json:"userid_list"`
 }
@@ -373,6 +444,10 @@ type V1UsersOpenIdToUseridPost200ResponseUseridListInner struct {
 
 // V1UsersOpenIdToUseridPostRequest struct for V1UsersOpenIdToUseridPostRequest
 type V1UsersOpenIdToUseridPostRequest struct {
+	// 操作者ID
+	OperatorId string `json:"operator_id"`
+	// 操作者ID类型
+	OperatorIdType int64 `json:"operator_id_type"`
 	// 第三方应用的sdkid。需要转换的open_id应为腾讯会议为该三方应用提供的open_id。
 	Sdkid string `json:"sdkid"`
 }
@@ -394,18 +469,43 @@ type V1UsersPostRequest struct {
 	Email      *string `json:"email,omitempty"`
 	EntryTime  *int64  `json:"entry_time,omitempty"`
 	JobTitle   *string `json:"job_title,omitempty"`
-	Phone      string  `json:"phone"`
-	StaffId    *string `json:"staff_id,omitempty"`
+	// 操作者ID
+	OperatorId string `json:"operator_id"`
+	// 操作者ID类型，1:userid
+	OperatorIdType int64   `json:"operator_id_type"`
+	Phone          string  `json:"phone"`
+	StaffId        *string `json:"staff_id,omitempty"`
 	// 1：高级账号  2：免费账号  3：免费账号100方 4:高级账号300方，5:高级账号500方，6：高级账号1000方，7:高级账号2000方     其中企业版/教育版：1，2 。免费组织 2。 商业版：2-7      根据传入的参数判断是否有该类型账号，没有则报错。创建成功即锁定该账号资源。默认值：商业版默认为高级账号，绑定资源为由小到大，资源消耗完账号为免费账号，企业版-高级账号
 	UserAccountType *int64 `json:"user_account_type,omitempty"`
 	Userid          string `json:"userid"`
 	Username        string `json:"username"`
 }
 
+// V1UsersPutRequest struct for V1UsersPutRequest
+type V1UsersPutRequest struct {
+	AvatarUrl *string `json:"avatar_url,omitempty"`
+	// 员工部门，暂只支持为用户分配1个部门。
+	DepartmentList []string `json:"department_list,omitempty"`
+	Email          *string  `json:"email,omitempty"`
+	EntryTime      *int64   `json:"entry_time,omitempty"`
+	JobTitle       *string  `json:"job_title,omitempty"`
+	// 操作者ID
+	OperatorId string `json:"operator_id"`
+	// 操作者ID类型，1:userid
+	OperatorIdType int64   `json:"operator_id_type"`
+	Phone          *string `json:"phone,omitempty"`
+	StaffId        *string `json:"staff_id,omitempty"`
+	Username       *string `json:"username,omitempty"`
+}
+
 // V1UsersUseridEnablePutRequest struct for V1UsersUseridEnablePutRequest
 type V1UsersUseridEnablePutRequest struct {
 	// 是否启用用户： true：启用 false：禁用
 	Enable bool `json:"enable"`
+	// 操作者ID
+	OperatorId string `json:"operator_id"`
+	// 操作者ID类型，1:userid
+	OperatorIdType int64 `json:"operator_id_type"`
 }
 
 // V1UsersUseridGet200Response struct for V1UsersUseridGet200Response
@@ -459,8 +559,12 @@ type V1UsersUseridPutRequest struct {
 	Email     *string `json:"email,omitempty"`
 	EntryTime *int64  `json:"entry_time,omitempty"`
 	JobTitle  *string `json:"job_title,omitempty"`
-	Phone     *string `json:"phone,omitempty"`
-	StaffId   *string `json:"staff_id,omitempty"`
+	// 操作者ID
+	OperatorId string `json:"operator_id"`
+	// 操作者ID类型，1:userid
+	OperatorIdType int64   `json:"operator_id_type"`
+	Phone          *string `json:"phone,omitempty"`
+	StaffId        *string `json:"staff_id,omitempty"`
 	// 1：高级账号 2：免费账号 3：免费账号100方 4:高级账号300方，5:高级账号500方，6：高级账号1000方，7:高级账号2000方 其中企业版/教育版：1，2 。免费组织 2。 商业版：2-7 根据传入的参数判断是否有该类型账号，没有则报错。更新后，原类型账号资源释放。
 	UserAccountType *int64  `json:"user_account_type,omitempty"`
 	Userid          *string `json:"userid,omitempty"`

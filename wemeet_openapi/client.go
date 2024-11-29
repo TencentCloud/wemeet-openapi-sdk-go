@@ -9,6 +9,7 @@ import (
 	meeting_guest "github.com/TencentCloud/wemeet-openapi-sdk-go/wemeet_openapi/service/meeting_guest"
 	meeting_room "github.com/TencentCloud/wemeet-openapi-sdk-go/wemeet_openapi/service/meeting_room"
 	meetings "github.com/TencentCloud/wemeet-openapi-sdk-go/wemeet_openapi/service/meetings"
+	pstn "github.com/TencentCloud/wemeet-openapi-sdk-go/wemeet_openapi/service/pstn"
 	record_intelligence "github.com/TencentCloud/wemeet-openapi-sdk-go/wemeet_openapi/service/record_intelligence"
 	records "github.com/TencentCloud/wemeet-openapi-sdk-go/wemeet_openapi/service/records"
 	user_manager "github.com/TencentCloud/wemeet-openapi-sdk-go/wemeet_openapi/service/user_manager"
@@ -24,6 +25,7 @@ type Client struct {
 	RecordsApi            records.Service
 	RecordIntelligenceApi record_intelligence.Service
 	MeetingGuestApi       meeting_guest.Service
+	PstnApi               pstn.Service
 	MeetingRoomApi        meeting_room.Service
 	LayoutApi             layout.Service
 }
@@ -109,6 +111,7 @@ func initService(client *Client) {
 	client.RecordsApi = records.NewService(client.config)
 	client.RecordIntelligenceApi = record_intelligence.NewService(client.config)
 	client.MeetingGuestApi = meeting_guest.NewService(client.config)
+	client.PstnApi = pstn.NewService(client.config)
 	client.MeetingRoomApi = meeting_room.NewService(client.config)
 	client.LayoutApi = layout.NewService(client.config)
 }
