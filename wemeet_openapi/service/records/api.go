@@ -4,7 +4,7 @@
 
    SAAS版RESTFUL风格API
 
-   API version: v1.0.5
+   API version: v1.0.6
 */
 package wemeetopenapi
 
@@ -1230,16 +1230,14 @@ func (s *recordsAPIService) V1RecordsEventsGet(ctx context.Context, request *Api
 }
 
 type ApiV1RecordsGetRequest struct {
-	// 查询起始时间戳，UNIX 时间戳（单位秒）。说明：时间区间不允许超过31天。
-	StartTime *string `json:"-"`
-	// 查询结束时间戳，UNIX 时间戳（单位秒）。说明：时间区间不允许超过31天。
-	EndTime *string `json:"-"`
 	// 操作者ID，必须与operator_id_type同时出现。
 	OperatorId *string `json:"-"`
 	// 操作者ID的类型，必须与operator_id同时出现。
 	OperatorIdType *string `json:"-"`
-	// 用户 ID（企业内部请使用企业唯一用户标识；OAuth2.0 鉴权用户请使用 openId），当会议 ID 和会议 code 均为空时，表示查询用户所有会议的录制列表。
-	Userid *string `json:"-"`
+	// 查询起始时间戳，UNIX 时间戳（单位秒）。说明：时间区间不允许超过31天。
+	StartTime *string `json:"-"`
+	// 查询结束时间戳，UNIX 时间戳（单位秒）。说明：时间区间不允许超过31天。
+	EndTime *string `json:"-"`
 	// 会议的唯一 ID，不为空时优先根据会议 ID 查询。
 	MeetingId *string `json:"-"`
 	// 会议 code，当 meeting_id 为空且 meeting_code 不为空时根据会议 code 查询。
@@ -1275,6 +1273,14 @@ func (s *recordsAPIService) V1RecordsGet(ctx context.Context, request *ApiV1Reco
 		QueryParams: xhttp.QueryParams{},
 	}
 
+	if request.OperatorId == nil {
+		return nil, fmt.Errorf("operator_id is required and must be specified")
+	}
+
+	if request.OperatorIdType == nil {
+		return nil, fmt.Errorf("operator_id_type is required and must be specified")
+	}
+
 	if request.StartTime == nil {
 		return nil, fmt.Errorf("start_time is required and must be specified")
 	}
@@ -1290,9 +1296,6 @@ func (s *recordsAPIService) V1RecordsGet(ctx context.Context, request *ApiV1Reco
 	}
 	if request.OperatorIdType != nil {
 		apiReq.QueryParams.Set("operator_id_type", core.QueryValue(request.OperatorIdType))
-	}
-	if request.Userid != nil {
-		apiReq.QueryParams.Set("userid", core.QueryValue(request.Userid))
 	}
 	if request.MeetingId != nil {
 		apiReq.QueryParams.Set("meeting_id", core.QueryValue(request.MeetingId))

@@ -4,7 +4,7 @@
 
    SAAS版RESTFUL风格API
 
-   API version: v1.0.5
+   API version: v1.0.6
 */
 package wemeetopenapi
 
@@ -866,6 +866,10 @@ type ApiV1MeetingRoomsOperatorIdMeetingsGetRequest struct {
 	OperatorIdType *string `json:"-"`
 	// 用户的终端设备类型： 1：PC 2：Mac 3：Android 4：iOS 5：Web 6：iPad 7：Android Pad 8：小程序 9：voip、sip 设备 10：linux 20：Rooms for Touch Windows 21：Rooms for Touch Mac 22：Rooms for Touch Android 30：Controller for Touch Windows 32：Controller for Touch Android 33：Controller for Touch Iphone
 	Instanceid *string `json:"-"`
+	// 目标查询 roomsid。
+	TargetRoomsId *string `json:"-"`
+	// 目标查询 roomsid 的类型： 3：rooms 设备 rooms_id 5：会议室 ID meeting_room_id
+	TargetRoomsIdType *string `json:"-"`
 	// Unix 时间戳。查询起始时间，时间区间不超过90天。
 	StartTime *string `json:"-"`
 	// Unix 时间戳。查询结束时间，时间区间不超过90天。
@@ -903,6 +907,14 @@ func (s *meetingRoomAPIService) V1MeetingRoomsOperatorIdMeetingsGet(ctx context.
 		return nil, fmt.Errorf("instanceid is required and must be specified")
 	}
 
+	if request.TargetRoomsId == nil {
+		return nil, fmt.Errorf("target_rooms_id is required and must be specified")
+	}
+
+	if request.TargetRoomsIdType == nil {
+		return nil, fmt.Errorf("target_rooms_id_type is required and must be specified")
+	}
+
 	// path 参数
 	apiReq.PathParams.Set("operator_id", core.PathValue(request.OperatorId))
 	// query 参数
@@ -923,6 +935,12 @@ func (s *meetingRoomAPIService) V1MeetingRoomsOperatorIdMeetingsGet(ctx context.
 	}
 	if request.PageSize != nil {
 		apiReq.QueryParams.Set("page_size", core.QueryValue(request.PageSize))
+	}
+	if request.TargetRoomsId != nil {
+		apiReq.QueryParams.Set("target_rooms_id", core.QueryValue(request.TargetRoomsId))
+	}
+	if request.TargetRoomsIdType != nil {
+		apiReq.QueryParams.Set("target_rooms_id_type", core.QueryValue(request.TargetRoomsIdType))
 	}
 	// 转换 options
 	var httpOptions []xhttp.RequestOptionFunc

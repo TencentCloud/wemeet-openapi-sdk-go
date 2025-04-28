@@ -4,7 +4,7 @@
 
    SAAS版RESTFUL风格API
 
-   API version: v1.0.5
+   API version: v1.0.6
 */
 package wemeetopenapi
 
@@ -15,17 +15,15 @@ type V1MeetingsMeetingIdDismissPostRequest struct {
 	// 设备类型
 	Instanceid int64 `json:"instanceid"`
 	// 操作者ID，根据operator_id_type的值，使用不同的类型
-	OperatorId *string `json:"operator_id,omitempty"`
+	OperatorId string `json:"operator_id"`
 	// 操作者ID的类型：1:userid  2:openid（预留编号，本次不添加，未来新增接口使用）3:rooms_id  4: ms_open_id
-	OperatorIdType *int64 `json:"operator_id_type,omitempty"`
+	OperatorIdType int64 `json:"operator_id_type"`
 	// 原因代码，可为用户自定义
 	ReasonCode int64 `json:"reason_code"`
 	// 取消原因
 	ReasonDetail *string `json:"reason_detail,omitempty"`
 	// 是否回收会议号，默认值为0： 0：不回收会议号，可以重新入会 1： 回收会议号，不可重新入会
 	RetrieveCode *int64 `json:"retrieve_code,omitempty"`
-	// 调用方用于标示用户的唯一 ID（企业内部请使用企业唯一用户标识；OAuth2.0 鉴权用户请使用 openId）。 企业唯一用户标识说明：企业对接 SSO 时使用的员工唯一标识 ID，企业调用创建用户接口时传递的 userid 参数。
-	Userid *string `json:"userid,omitempty"`
 }
 
 // V1RealControlMeetingsMeetingIdAsrPut200Response struct for V1RealControlMeetingsMeetingIdAsrPut200Response
@@ -43,9 +41,9 @@ type V1RealControlMeetingsMeetingIdAsrPutRequest struct {
 	// 是否自动打开转写侧边栏，仅在is_open 为 true 时生效，默认为 0， 0：打开实时转写页面 。1：不打开实时转写页面
 	OpenAsrView *int64 `json:"open_asr_view,omitempty"`
 	// 操作者 ID。operator_id 必须与 operator_id_type 配合使用。根据 operator_id_type 的值，operator_id 代表不同类型。
-	OperatorId *string `json:"operator_id,omitempty"`
+	OperatorId string `json:"operator_id"`
 	// 操作者 ID 的类型： 1：userid
-	OperatorIdType *int64 `json:"operator_id_type,omitempty"`
+	OperatorIdType int64 `json:"operator_id_type"`
 }
 
 // V1RealControlMeetingsMeetingIdCohostsPutRequest struct for V1RealControlMeetingsMeetingIdCohostsPutRequest
@@ -59,8 +57,6 @@ type V1RealControlMeetingsMeetingIdCohostsPutRequest struct {
 	// 操作者 ID 的类型： 2：openid 4：ms_open_id
 	OperatorIdType *int64                                              `json:"operator_id_type,omitempty"`
 	User           V1RealControlMeetingsMeetingIdCohostsPutRequestUser `json:"user"`
-	// 操作者用户唯一身份 ID，仅支持主持人，且只适用于单场会议。即将废弃，推荐使用ms_open_id。
-	Uuid *string `json:"uuid,omitempty"`
 }
 
 // V1RealControlMeetingsMeetingIdCohostsPutRequestUser struct for V1RealControlMeetingsMeetingIdCohostsPutRequestUser
@@ -71,8 +67,6 @@ type V1RealControlMeetingsMeetingIdCohostsPutRequestUser struct {
 	ToOperatorId *string `json:"to_operator_id,omitempty"`
 	// 用户ID的类型：  4: ms_open_id
 	ToOperatorIdType *int64 `json:"to_operator_id_type,omitempty"`
-	// 用户的唯一标识uuid
-	Uuid *string `json:"uuid,omitempty"`
 }
 
 // V1RealControlMeetingsMeetingIdDocPutRequest struct for V1RealControlMeetingsMeetingIdDocPutRequest
@@ -85,8 +79,6 @@ type V1RealControlMeetingsMeetingIdDocPutRequest struct {
 	OperatorId *string `json:"operator_id,omitempty"`
 	// 操作者ID的类型：  2:openid  4: ms_open_id
 	OperatorIdType *int64 `json:"operator_id_type,omitempty"`
-	// 操作者用户唯一身份 ID，仅支持主持人和联席主持人，且只适用于单场会议。即将废弃，推荐使用ms_open_id。
-	Uuid *string `json:"uuid,omitempty"`
 }
 
 // V1RealControlMeetingsMeetingIdKickoutPutRequest struct for V1RealControlMeetingsMeetingIdKickoutPutRequest
@@ -103,8 +95,6 @@ type V1RealControlMeetingsMeetingIdKickoutPutRequest struct {
 	Reason *string `json:"reason,omitempty"`
 	// 被操作用户对象信息列表
 	Users []V1RealControlMeetingsMeetingIdKickoutPutRequestUsersInner `json:"users"`
-	// 操作者用户唯一身份 ID，仅支持主持人和联席主持人，且只适用于单场会议。即将废弃，推荐使用ms_open_id。
-	Uuid *string `json:"uuid,omitempty"`
 }
 
 // V1RealControlMeetingsMeetingIdKickoutPutRequestUsersInner struct for V1RealControlMeetingsMeetingIdKickoutPutRequestUsersInner
@@ -130,8 +120,6 @@ type V1RealControlMeetingsMeetingIdMutesPutRequest struct {
 	// 操作者ID的类型：2:openid 4: ms_open_id
 	OperatorIdType *int64                                            `json:"operator_id_type,omitempty"`
 	User           V1RealControlMeetingsMeetingIdMutesPutRequestUser `json:"user"`
-	// 操作者用户唯一身份 ID，仅支持主持人和联席主持人，且只适用于单场会议。即将废弃，推荐使用ms_open_id。
-	Uuid *string `json:"uuid,omitempty"`
 }
 
 // V1RealControlMeetingsMeetingIdMutesPutRequestUser struct for V1RealControlMeetingsMeetingIdMutesPutRequestUser
@@ -142,8 +130,6 @@ type V1RealControlMeetingsMeetingIdMutesPutRequestUser struct {
 	ToOperatorId *string `json:"to_operator_id,omitempty"`
 	// 用户ID的类型：  4: ms_open_id
 	ToOperatorIdType *int64 `json:"to_operator_id_type,omitempty"`
-	// 用户的唯一标识uuid
-	Uuid *string `json:"uuid,omitempty"`
 }
 
 // V1RealControlMeetingsMeetingIdNamesPutRequest struct for V1RealControlMeetingsMeetingIdNamesPutRequest
@@ -177,8 +163,6 @@ type V1RealControlMeetingsMeetingIdScreenSharedPutRequest struct {
 	// 操作者ID的类型：  2:openid  4: ms_open_id
 	OperatorIdType *int64                                                   `json:"operator_id_type,omitempty"`
 	User           V1RealControlMeetingsMeetingIdScreenSharedPutRequestUser `json:"user"`
-	// 操作者用户唯一身份 ID，仅支持主持人和联席主持人，且只适用于单场会议。即将废弃，推荐使用ms_open_id。
-	Uuid *string `json:"uuid,omitempty"`
 }
 
 // V1RealControlMeetingsMeetingIdScreenSharedPutRequestUser struct for V1RealControlMeetingsMeetingIdScreenSharedPutRequestUser
@@ -189,8 +173,6 @@ type V1RealControlMeetingsMeetingIdScreenSharedPutRequestUser struct {
 	ToOperatorId *string `json:"to_operator_id,omitempty"`
 	// 用户ID的类型：4: ms_open_id
 	ToOperatorIdType *int64 `json:"to_operator_id_type,omitempty"`
-	// 用户的唯一标识uuid
-	Uuid *string `json:"uuid,omitempty"`
 }
 
 // V1RealControlMeetingsMeetingIdStatusPutRequest struct for V1RealControlMeetingsMeetingIdStatusPutRequest
@@ -223,8 +205,6 @@ type V1RealControlMeetingsMeetingIdStatusPutRequest struct {
 	PlayIvrOnJoin *bool `json:"play_ivr_on_join,omitempty"`
 	// 是否允许参会者发起屏幕共享 true：允许 false：不允许
 	ShareScreen *bool `json:"share_screen,omitempty"`
-	// 用户的唯一标识uuid
-	Uuid *string `json:"uuid,omitempty"`
 }
 
 // V1RealControlMeetingsMeetingIdVideoPutRequest struct for V1RealControlMeetingsMeetingIdVideoPutRequest
@@ -236,8 +216,6 @@ type V1RealControlMeetingsMeetingIdVideoPutRequest struct {
 	// 操作者ID的类型： 2:openid 4: ms_open_id
 	OperatorIdType *int64                                            `json:"operator_id_type,omitempty"`
 	User           V1RealControlMeetingsMeetingIdVideoPutRequestUser `json:"user"`
-	// 操作者用户唯一身份 ID，仅支持主持人和联席主持人，且只适用于单场会议。即将废弃，推荐使用ms_open_id。
-	Uuid *string `json:"uuid,omitempty"`
 	// 是否开启视频： false：关闭视频（默认值）。 true：开启视频， 仅支持 MRA 设备。
 	Video *bool `json:"video,omitempty"`
 }
@@ -250,8 +228,6 @@ type V1RealControlMeetingsMeetingIdVideoPutRequestUser struct {
 	ToOperatorId *string `json:"to_operator_id,omitempty"`
 	// 用户ID的类型： 4: ms_open_id
 	ToOperatorIdType *int64 `json:"to_operator_id_type,omitempty"`
-	// 用户的唯一标识uuid
-	Uuid *string `json:"uuid,omitempty"`
 }
 
 // V1RealControlMeetingsMeetingIdWaitingRoomPutRequest struct for V1RealControlMeetingsMeetingIdWaitingRoomPutRequest
@@ -267,7 +243,17 @@ type V1RealControlMeetingsMeetingIdWaitingRoomPutRequest struct {
 	// 操作者ID的类型： 2:openid 4: ms_open_id
 	OperatorIdType *int64 `json:"operator_id_type,omitempty"`
 	// 被操作用户对象信息列表
-	Users []V1RealControlMeetingsMeetingIdMutesPutRequestUser `json:"users"`
-	// 操作者用户唯一身份 ID，仅支持主持人和联席主持人，且只适用于单场会议。即将废弃，推荐使用ms_open_id。
+	Users []V1RealControlMeetingsMeetingIdWaitingRoomPutRequestUsersInner `json:"users"`
+}
+
+// V1RealControlMeetingsMeetingIdWaitingRoomPutRequestUsersInner struct for V1RealControlMeetingsMeetingIdWaitingRoomPutRequestUsersInner
+type V1RealControlMeetingsMeetingIdWaitingRoomPutRequestUsersInner struct {
+	// 用户的终端设备类型： 0：PSTN 1：PC 2：Mac 3：Android 4：iOS 5：Web 6：iPad 7：Android Pad 8：小程序 9：voip、sip 设备 10：linux 20：Rooms for Touch Windows 21：Rooms for Touch MacOS 22：Rooms for Touch Android 30：Controller for Touch Windows 32：Controller for Touch Android 33：Controller for Touch iOS 说明：请与被操作者的设备类型保持一致，否则不生效。
+	Instanceid int64 `json:"instanceid"`
+	// 用户ID，根据to_operator_id_type的值，使用不同的类型
+	ToOperatorId *string `json:"to_operator_id,omitempty"`
+	// 用户ID的类型：  4: ms_open_id
+	ToOperatorIdType *int64 `json:"to_operator_id_type,omitempty"`
+	// 用户的唯一标识uuid
 	Uuid *string `json:"uuid,omitempty"`
 }

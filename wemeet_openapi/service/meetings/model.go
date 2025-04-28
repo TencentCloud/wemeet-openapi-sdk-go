@@ -4,7 +4,7 @@
 
    SAAS版RESTFUL风格API
 
-   API version: v1.0.5
+   API version: v1.0.6
 */
 package wemeetopenapi
 
@@ -413,11 +413,9 @@ type V1MeetingsMeetingIdEnrollApprovalsPutRequest struct {
 	// 设备类型
 	Instanceid *int64 `json:"instanceid,omitempty"`
 	// 操作者 ID。会议创建者可以导入报名信息。 operator_id 必须与 operator_id_type 配合使用。根据 operator_id_type 的值，operator_id 代表不同类型。  operator_id_type=2，operator_id必须和公共参数的openid一致。  operator_id和userid至少填写一个，两个参数如果都传了以operator_id为准。  使用OAuth公参鉴权后不能使用userid为入参。
-	OperatorId *string `json:"operator_id,omitempty"`
+	OperatorId string `json:"operator_id"`
 	// 操作者 ID 的类型：  1: userid 2: open_id  如果operator_id和userid具有值，则以operator_id为准；
 	OperatorIdType int64 `json:"operator_id_type"`
-	// 用户id
-	Userid *string `json:"userid,omitempty"`
 }
 
 // V1MeetingsMeetingIdEnrollConfigGet200Response struct for V1MeetingsMeetingIdEnrollConfigGet200Response
@@ -496,13 +494,11 @@ type V1MeetingsMeetingIdEnrollConfigPutRequest struct {
 	// 本企业用户无需报名。 true: 本企业用户无需报名。 false：默认配置，所有用户需要报名。
 	NoRegistrationNeededForStaff *bool `json:"no_registration_needed_for_staff,omitempty"`
 	// 操作者 ID。会议创建者可以导入报名信息。 operator_id 必须与 operator_id_type 配合使用。根据 operator_id_type 的值，operator_id 代表不同类型。  operator_id_type=2，operator_id必须和公共参数的openid一致。  operator_id和userid至少填写一个，两个参数如果都传了以operator_id为准。  使用OAuth公参鉴权后不能使用userid为入参。
-	OperatorId *string `json:"operator_id,omitempty"`
+	OperatorId string `json:"operator_id"`
 	// 操作者 ID 的类型：  1: userid 2: open_id  如果operator_id和userid具有值，则以operator_id为准；
-	OperatorIdType *int64 `json:"operator_id_type,omitempty"`
+	OperatorIdType int64 `json:"operator_id_type"`
 	// 报名问题列表，非特殊问题按传入的顺序排序，特殊问题会优先放在最前面，仅开启收集问题时有效
 	QuestionList []V1MeetingsMeetingIdEnrollConfigPutRequestQuestionListInner `json:"question_list,omitempty"`
-	// 用户id
-	Userid *string `json:"userid,omitempty"`
 }
 
 // V1MeetingsMeetingIdEnrollConfigPutRequestQuestionListInner struct for V1MeetingsMeetingIdEnrollConfigPutRequestQuestionListInner
@@ -547,13 +543,11 @@ type V1MeetingsMeetingIdEnrollIdsPostRequest struct {
 	// 当场会议的用户临时 ID（适用于所有用户）数组，单次最多支持500条。
 	MsOpenIdList []string `json:"ms_open_id_list"`
 	// 操作者 ID。会议创建者可以导入报名信息。 operator_id 必须与 operator_id_type 配合使用。根据 operator_id_type 的值，operator_id 代表不同类型。 operator_id_type=2，operator_id 必须和公共参数的 openid 一致。 operator_id 和 userid 至少填写一个，两个参数如果都传了以 operator_id 为准。 使用 OAuth 公参鉴权后不能使用 userid 为入参。
-	OperatorId *string `json:"operator_id,omitempty"`
+	OperatorId string `json:"operator_id"`
 	// 操作者 ID 的类型： 1：userid 2：open_id 如果 operator_id 和 userid 具有值，则以 operator_id 为准。
 	OperatorIdType *int64 `json:"operator_id_type,omitempty"`
 	// 查询报名 ID 的排序规则。当该账号存在多条报名记录（手机号导入、手动报名等）时，该接口返回的顺序。 1：优先查询手机号导入报名，再查询用户手动报名，默认值。 2：优先查询用户手动报名，再查手机号导入。
 	SortingRules *int64 `json:"sorting_rules,omitempty"`
-	// 会议创建者的用户 ID。为了防止现网应用报错，此参数实则仍然兼容 openid，如无 oauth 应用使用报名接口则也可做成不兼容变更。
-	Userid *string `json:"userid,omitempty"`
 }
 
 // V1MeetingsMeetingIdEnrollImportPost200Response struct for V1MeetingsMeetingIdEnrollImportPost200Response
@@ -710,8 +704,8 @@ type V1MeetingsMeetingIdGet200ResponseMeetingInfoListInnerSettings struct {
 	MuteEnableJoin              *bool  `json:"mute_enable_join,omitempty"`
 	MuteEnableTypeJoin          *int64 `json:"mute_enable_type_join,omitempty"`
 	OnlyAllowEnterpriseUserJoin *bool  `json:"only_allow_enterprise_user_join,omitempty"`
-	// 是否仅受邀成员可入会，默认值为false，true：仅受邀成员可入会，false：所有成员可入会
-	OnlyInviteesAllowed       *bool  `json:"only_invitees_allowed,omitempty"`
+	// 成员入会限制，1：所有成员可入会，2：仅受邀成员可入会，3：仅企业内部成员可入会 ；当only_user_join_type和only_allow_enterprise_user_join同时传的时候，以only_user_join_type为准
+	OnlyUserJoinType          *int64 `json:"only_user_join_type,omitempty"`
 	ParticipantJoinAutoRecord *bool  `json:"participant_join_auto_record,omitempty"`
 	WaterMarkType             *int64 `json:"water_mark_type,omitempty"`
 }

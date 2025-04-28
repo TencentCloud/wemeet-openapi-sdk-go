@@ -4,7 +4,7 @@
 
    SAAS版RESTFUL风格API
 
-   API version: v1.0.5
+   API version: v1.0.6
 */
 package wemeetopenapi
 
@@ -1313,18 +1313,16 @@ func (s *meetingsAPIService) V1MeetingsMeetingIdCustomerShortUrlGet(ctx context.
 type ApiV1MeetingsMeetingIdEnrollApprovalsGetRequest struct {
 	// 会议ID
 	MeetingId string `json:"-"`
+	// 操作者 ID。会议创建者可以导入报名信息。 operator_id 必须与 operator_id_type 配合使用。根据 operator_id_type 的值，operator_id 代表不同类型。  operator_id_type=2，operator_id必须和公共参数的openid一致。  operator_id和userid至少填写一个，两个参数如果都传了以operator_id为准。  使用OAuth公参鉴权后不能使用userid为入参。
+	OperatorId *string `json:"-"`
+	// 操作者 ID 的类型：  1: userid 2: open_id  如果operator_id和userid具有值，则以operator_id为准；
+	OperatorIdType *string `json:"-"`
 	// 用户的终端设备类型： 1：PC 2：Mac 3：Android 4：iOS 5：Web 6：iPad 7：Android Pad 8：小程序
 	Instanceid *string `json:"-"`
 	// 当前页，页码起始值为1
 	Page *string `json:"-"`
 	// 分页大小，最大50条
 	PageSize *string `json:"-"`
-	// 操作者 ID。会议创建者可以导入报名信息。 operator_id 必须与 operator_id_type 配合使用。根据 operator_id_type 的值，operator_id 代表不同类型。  operator_id_type=2，operator_id必须和公共参数的openid一致。  operator_id和userid至少填写一个，两个参数如果都传了以operator_id为准。  使用OAuth公参鉴权后不能使用userid为入参。
-	OperatorId *string `json:"-"`
-	// 操作者 ID 的类型：  1: userid 2: open_id  如果operator_id和userid具有值，则以operator_id为准；
-	OperatorIdType *string `json:"-"`
-	// 会议创建者的用户 ID（企业内部请使用企业唯一用户标识；OAuth2.0 鉴权用户请使用 openId）为了防止现网应用报错，此参数实则仍然兼容openid，如无oauth应用使用报名接口则也可做成不兼容变更。
-	Userid *string `json:"-"`
 	// 审批状态筛选字段，审批状态：0 全部，1 待审批，2 已拒绝，3 已批准，默认返回全部
 	Status *string                 `json:"-"`
 	Body   *map[string]interface{} `json:"body,omitempty"`
@@ -1350,6 +1348,14 @@ func (s *meetingsAPIService) V1MeetingsMeetingIdEnrollApprovalsGet(ctx context.C
 		QueryParams: xhttp.QueryParams{},
 	}
 
+	if request.OperatorId == nil {
+		return nil, fmt.Errorf("operator_id is required and must be specified")
+	}
+
+	if request.OperatorIdType == nil {
+		return nil, fmt.Errorf("operator_id_type is required and must be specified")
+	}
+
 	if request.Instanceid == nil {
 		return nil, fmt.Errorf("instanceid is required and must be specified")
 	}
@@ -1370,9 +1376,6 @@ func (s *meetingsAPIService) V1MeetingsMeetingIdEnrollApprovalsGet(ctx context.C
 	}
 	if request.OperatorIdType != nil {
 		apiReq.QueryParams.Set("operator_id_type", core.QueryValue(request.OperatorIdType))
-	}
-	if request.Userid != nil {
-		apiReq.QueryParams.Set("userid", core.QueryValue(request.Userid))
 	}
 	if request.Instanceid != nil {
 		apiReq.QueryParams.Set("instanceid", core.QueryValue(request.Instanceid))
@@ -1486,15 +1489,13 @@ func (s *meetingsAPIService) V1MeetingsMeetingIdEnrollApprovalsPut(ctx context.C
 type ApiV1MeetingsMeetingIdEnrollConfigGetRequest struct {
 	// 会议ID
 	MeetingId string `json:"-"`
-	// 用户的终端设备类型： 1：PC 2：Mac 3：Android 4：iOS 5：Web 6：iPad 7：Android Pad 8：小程序
-	Instanceid *string `json:"-"`
 	// 操作者 ID。会议创建者可以导入报名信息。 operator_id 必须与 operator_id_type 配合使用。根据 operator_id_type 的值，operator_id 代表不同类型。  operator_id_type=2，operator_id必须和公共参数的openid一致。  operator_id和userid至少填写一个，两个参数如果都传了以operator_id为准。  使用OAuth公参鉴权后不能使用userid为入参。
 	OperatorId *string `json:"-"`
 	// 操作者 ID 的类型：  1: userid 2: open_id  如果operator_id和userid具有值，则以operator_id为准；
 	OperatorIdType *string `json:"-"`
-	// 会议创建者的用户 ID（企业内部请使用企业唯一用户标识；OAuth2.0 鉴权用户请使用 openId）
-	Userid *string                 `json:"-"`
-	Body   *map[string]interface{} `json:"body,omitempty"`
+	// 用户的终端设备类型： 1：PC 2：Mac 3：Android 4：iOS 5：Web 6：iPad 7：Android Pad 8：小程序
+	Instanceid *string                 `json:"-"`
+	Body       *map[string]interface{} `json:"body,omitempty"`
 }
 
 type ApiV1MeetingsMeetingIdEnrollConfigGetResponse struct {
@@ -1517,6 +1518,14 @@ func (s *meetingsAPIService) V1MeetingsMeetingIdEnrollConfigGet(ctx context.Cont
 		QueryParams: xhttp.QueryParams{},
 	}
 
+	if request.OperatorId == nil {
+		return nil, fmt.Errorf("operator_id is required and must be specified")
+	}
+
+	if request.OperatorIdType == nil {
+		return nil, fmt.Errorf("operator_id_type is required and must be specified")
+	}
+
 	if request.Instanceid == nil {
 		return nil, fmt.Errorf("instanceid is required and must be specified")
 	}
@@ -1529,9 +1538,6 @@ func (s *meetingsAPIService) V1MeetingsMeetingIdEnrollConfigGet(ctx context.Cont
 	}
 	if request.OperatorIdType != nil {
 		apiReq.QueryParams.Set("operator_id_type", core.QueryValue(request.OperatorIdType))
-	}
-	if request.Userid != nil {
-		apiReq.QueryParams.Set("userid", core.QueryValue(request.Userid))
 	}
 	if request.Instanceid != nil {
 		apiReq.QueryParams.Set("instanceid", core.QueryValue(request.Instanceid))
@@ -1829,10 +1835,8 @@ type ApiV1MeetingsMeetingIdGetRequest struct {
 	// 操作者ID，根据operator_id_type的值，使用不同的类型
 	OperatorId *string `json:"-"`
 	// 操作者ID的类型：1.userid 2.openid 3.rooms_id
-	OperatorIdType *string `json:"-"`
-	// 会议创建者的用户 ID（企业内部请使用企业唯一用户标识；OAuth2.0 鉴权用户请使用 openId）
-	Userid *string                 `json:"-"`
-	Body   *map[string]interface{} `json:"body,omitempty"`
+	OperatorIdType *string                 `json:"-"`
+	Body           *map[string]interface{} `json:"body,omitempty"`
 }
 
 type ApiV1MeetingsMeetingIdGetResponse struct {
@@ -1869,9 +1873,6 @@ func (s *meetingsAPIService) V1MeetingsMeetingIdGet(ctx context.Context, request
 	}
 	if request.OperatorIdType != nil {
 		apiReq.QueryParams.Set("operator_id_type", core.QueryValue(request.OperatorIdType))
-	}
-	if request.Userid != nil {
-		apiReq.QueryParams.Set("userid", core.QueryValue(request.Userid))
 	}
 	if request.Instanceid != nil {
 		apiReq.QueryParams.Set("instanceid", core.QueryValue(request.Instanceid))

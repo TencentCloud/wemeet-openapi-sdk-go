@@ -4,7 +4,7 @@
 
    SAAS版RESTFUL风格API
 
-   API version: v1.0.5
+   API version: v1.0.6
 */
 package wemeetopenapi
 
@@ -211,8 +211,6 @@ type V1MeetingsMeetingIdLayoutsPostRequest struct {
 	OperatorId string `json:"operator_id"`
 	// 操作者id的类型，1:userid
 	OperatorIdType int64 `json:"operator_id_type"`
-	// 会议创建者ID
-	Userid string `json:"userid"`
 }
 
 // V1MeetingsMeetingIdLayoutsPostRequestLayoutListInner struct for V1MeetingsMeetingIdLayoutsPostRequestLayoutListInner
