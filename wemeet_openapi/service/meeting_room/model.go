@@ -4,7 +4,7 @@
 
    SAAS版RESTFUL风格API
 
-   API version: v1.0.6
+   API version: v1.0.7
 */
 package wemeetopenapi
 
@@ -532,6 +532,10 @@ type V1MeetingsMeetingIdBookRoomsPost200ResponseMeetingRoomListInner struct {
 
 // V1MeetingsMeetingIdBookRoomsPostRequest struct for V1MeetingsMeetingIdBookRoomsPostRequest
 type V1MeetingsMeetingIdBookRoomsPostRequest struct {
+	// 会议室ID列表
+	MeetingRoomIdList []string `json:"meeting_room_id_list"`
+	OperatorId        string   `json:"operator_id"`
+	OperatorIdType    int64    `json:"operator_id_type"`
 	// true：在会议开始前的一小时内，在 Room 上显示会议主题。默认值为 true。 false：在会议开始前的一小时内，在 Room 上不显示会议主题。 说明：该参数并不影响预定时间晚过当前时间一个小时以上的会议。超过一小时的会议默认不显示会议主题。
 	SubjectVisible *bool `json:"subject_visible,omitempty"`
 }
