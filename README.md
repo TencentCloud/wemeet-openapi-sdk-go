@@ -37,7 +37,7 @@ func CreateMeetingDemo() {
             Instanceid:  1,
             MeetingType: wemeetcore.PtrInt64(0),
             Subject:     "测试会议",
-            Type:        1,
+            Type:        0,
             Userid:      "userid",
             StartTime:   "1651334400",
             EndTime:     "1651377600",
